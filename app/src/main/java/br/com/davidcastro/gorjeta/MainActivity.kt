@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gorjeta : TextView
     private lateinit var total : TextView
     private var percent : Int = 0
-    private var gorjetaValur : Double = 0.0
+    private var gorjetaValue : Double = 0.0
     private var result : Double = 0.0
 
 
@@ -28,8 +29,11 @@ class MainActivity : AppCompatActivity() {
         fun calcular(){
             if (!myEditText.text.toString().isBlank()){
                 result = myEditText.text.toString().toDouble()
-                result *= percent.toDouble()/100
-                total.text= "Total: R$ ${result}"
+                gorjetaValue = result * (percent.toDouble() / 100)
+                result = result +  gorjetaValue
+                val df = DecimalFormat("#.##")
+                gorjeta.text = "Gorjeta: R$ ${df.format(gorjetaValue)}"
+                total.text = "Total: R$ ${df.format(result)}"
             }
         }
 
@@ -41,9 +45,11 @@ class MainActivity : AppCompatActivity() {
 
         myEditText.addTextChangedListener {
             if (myEditText.text.toString().isBlank()){
+                gorjeta.text = "Gorjeta: R$ 0"
                 total.text= "Total: R$ 0"
             }else{
                 calcular()
+                gorjeta.text = "Gorjeta: R$ ${gorjetaValue}"
                 total.text= "Total: R$ ${result}"
             }
         }
